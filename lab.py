@@ -99,24 +99,24 @@ def ping(host, timeout=1):
     print("")
     # Send ping requests to a server separated by approximately one second
 
-    myID = os.getpid() & 0xFFFF  # Return the current process i
+    ID = os.getpid() & 0xFFFF  # Return the current process i
     loss = 0
-    for i in range(4):
-        result = doOnePing(dest, myID, i, timeout)
+    n = 0
+
+    result = doOnePing(dest, ID, n, timeout)
+    ttl = result[1]
+    print("TTL: ", ttl, "\n")
+    while 1:
+        result = doOnePing(dest, ID, n, timeout)
         if not result:
             print("Request timed out.")
             loss += 1
         else:
             delay = int(result[0]*1000)
-            ttl = result[1]
-            bytes = result[2]
-            print("byte(s)=" + str(bytes) + " delay=" + str(delay) + "ms TTL=" + str(ttl))
+            print("delay=" + str(delay) + "ms")
         time.sleep(1)  # one second
-    print("Packet: sent = " + str(4) + " received = " + str(4-loss) + " lost = " + str(loss) )
-    print("\n")
+        n +=1
     return
 
-print(" GOOGLE SITE \n")
+print("GOOGLE SITE: \n")
 ping("www.google.com")
-print("GITHUB SITE \n")
-ping("www.github.com")
